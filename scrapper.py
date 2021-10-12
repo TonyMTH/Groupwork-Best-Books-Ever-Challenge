@@ -81,6 +81,10 @@ while True:
         main_driver.implicitly_wait(wait_time)
         main_driver.get(book_i_driver_url)
 
+        rightContainer = main_driver.find_element_by_xpath("//div[@class='rightContainer']")
+        genres = rightContainer.find_elements_by_xpath('.//div[@class="elementList "]')
+        genres = [g.find_element_by_xpath('.//div[@class="left"]').text for g in genres]
+
         bookMeta = main_driver.find_element_by_xpath('.//div[@id="bookMeta"]')
         hyperlink = bookMeta.find_elements_by_xpath('.//a[@class="gr-hyperlink"]')
         numberOfPages = main_driver.find_element_by_xpath('.//span[@itemprop="numberOfPages"]')
@@ -123,7 +127,7 @@ while True:
         content_dict['original_publish_year'].append( get_original_publish_year(original_publish_year.text) )
         content_dict['places'].append(places)
         content_dict['awards'].append(awards)
-        content_dict['genres'].append(None)
+        content_dict['genres'].append(genres)
 
         #save data to csv after save_freq iterations
         if k%save_freq == 0 and k != 0:
