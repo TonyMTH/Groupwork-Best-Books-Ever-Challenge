@@ -81,20 +81,25 @@ while True:
         main_driver.implicitly_wait(wait_time)
         main_driver.get(book_i_driver_url)
 
+        #get genres
         rightContainer = main_driver.find_element_by_xpath("//div[@class='rightContainer']")
         genres = rightContainer.find_elements_by_xpath('.//div[@class="elementList "]')
         genres = [g.find_element_by_xpath('.//div[@class="left"]').text for g in genres]
 
+        #get number of pages
         bookMeta = main_driver.find_element_by_xpath('.//div[@id="bookMeta"]')
         hyperlink = bookMeta.find_elements_by_xpath('.//a[@class="gr-hyperlink"]')
         numberOfPages = main_driver.find_element_by_xpath('.//span[@itemprop="numberOfPages"]')
 
+        #get original published year
         details = main_driver.find_element_by_xpath('.//div[@id="details"]')
         original_publish_year = details.find_elements_by_xpath('.//div[@class="row"]')[1]
-        main_driver.find_element_by_xpath('.//a[@id="bookDataBoxShow"]').click()
 
+
+        main_driver.find_element_by_xpath('.//a[@id="bookDataBoxShow"]').click()
         bookDataBox = main_driver.find_element_by_xpath('.//div[@id="bookDataBox"]')
 
+        #get places
         try:
             setting_div = bookDataBox.find_element_by_xpath("//div[text()='Setting']")
             settings = setting_div.find_element_by_xpath("./following-sibling::div")
@@ -106,6 +111,7 @@ while True:
         except:
             places = None
 
+        #get awards
         try:
             literary_awards_div = bookDataBox.find_element_by_xpath("//div[text()='Literary Awards']")
             literary_awards = literary_awards_div.find_element_by_xpath("./following-sibling::div")
@@ -119,6 +125,7 @@ while True:
             awards = None
 
 
+        #append results to dictionary
         content_dict['num_reviews'].append( get_no_review_pages(hyperlink[-1].text) )
         content_dict['num_pages'].append( get_no_review_pages(numberOfPages.text) )
         content_dict['original_publish_year'].append( get_original_publish_year(original_publish_year.text) )
