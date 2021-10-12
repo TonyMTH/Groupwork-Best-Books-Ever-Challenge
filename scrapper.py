@@ -106,8 +106,12 @@ while True:
         try:
             literary_awards_div = bookDataBox.find_element_by_xpath("//div[text()='Literary Awards']")
             literary_awards = literary_awards_div.find_element_by_xpath("./following-sibling::div")
-            awards = literary_awards.find_elements_by_tag_name("a")
-            awards = [ a.text for a in awards if a.text != '...more' and a.text.strip() != '']
+            children = literary_awards.find_elements_by_xpath('./span[contains(@class, "toggleLink")]')
+            if len(children) != 0:
+                children[0].click()
+            awards = literary_awards.find_elements_by_xpath('.//a[@class="award"]')
+            awards = [ a.text for a in awards ]
+            print(it)
         except:
             awards = None
 
