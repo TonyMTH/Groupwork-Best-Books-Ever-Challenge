@@ -81,49 +81,57 @@ while True:
         main_driver.implicitly_wait(wait_time)
         main_driver.get(book_i_driver_url)
 
+        #get genres
+        rightContainer = main_driver.find_element_by_xpath("//div[@class='rightContainer']")
+        genres = rightContainer.find_elements_by_xpath('.//div[@class="elementList "]')
+        genres = [g.find_element_by_xpath('.//div[@class="left"]').text for g in genres]
+
+        #get number of pages
         bookMeta = main_driver.find_element_by_xpath('.//div[@id="bookMeta"]')
         hyperlink = bookMeta.find_elements_by_xpath('.//a[@class="gr-hyperlink"]')
         numberOfPages = main_driver.find_element_by_xpath('.//span[@itemprop="numberOfPages"]')
 
+        #get original published year
         details = main_driver.find_element_by_xpath('.//div[@id="details"]')
         original_publish_year = details.find_elements_by_xpath('.//div[@class="row"]')[1]
-        main_driver.find_element_by_xpath('.//a[@id="bookDataBoxShow"]').click()
 
+
+        main_driver.find_element_by_xpath('.//a[@id="bookDataBoxShow"]').click()
         bookDataBox = main_driver.find_element_by_xpath('.//div[@id="bookDataBox"]')
 
+        #get places
         try:
             setting_div = bookDataBox.find_element_by_xpath("//div[text()='Setting']")
             settings = setting_div.find_element_by_xpath("./following-sibling::div")
+            children = settings.find_elements_by_xpath('./span[contains(@class, "toggleLink")]')
+            if len(children) != 0:
+                children[0].click()
             places = settings.find_elements_by_tag_name("a")
-            places = [ p.text for p in places if p.text != '…more' and p.text.strip() != '']
+            places = [ a.text for a in places if a.get_attribute("href")[-1] != '#' ]
         except:
             places = None
 
+        #get awards
         try:
             literary_awards_div = bookDataBox.find_element_by_xpath("//div[text()='Literary Awards']")
             literary_awards = literary_awards_div.find_element_by_xpath("./following-sibling::div")
-            awards = literary_awards.find_elements_by_tag_name("a")
-            awards = [ a.text for a in awards if a.text != '...more' and a.text.strip() != '']
+            children = literary_awards.find_elements_by_xpath('./span[contains(@class, "toggleLink")]')
+            if len(children) != 0:
+                children[0].click()
+            awards = literary_awards.find_elements_by_xpath('.//a[@class="award"]')
+            awards = [ a.text for a in awards ]
+            print(it)
         except:
             awards = None
 
-        # #genres_div = main_driver.find_element_by_xpath("//div[text()='Genres']")
-        # right_container = main_driver.find_element_by_xpath('.//div[@class="rightContainer"]')
-        # bigBoxBody = right_container.find_element_by_xpath('//div[@class="bigBoxContent containerWithHeaderContent"]')
-        # #class="h2Container gradientHeaderContainer"
-        # print('the')
-        # #print(genres_div.text)
-        # #genres = genres_div.find_element_by_xpath("./following-sibling::div")
-        # genres = bigBoxBody.find_elements_by_xpath('.//a[@class="actionLinkLite bookPageGenreLink"]')
-        # print(genres)
-        # #genres = [g.find_elements_by_xpath('.//div[@class="left"]').text for g in genres]
 
+        #append results to dictionary
         content_dict['num_reviews'].append( get_no_review_pages(hyperlink[-1].text) )
         content_dict['num_pages'].append( get_no_review_pages(numberOfPages.text) )
         content_dict['original_publish_year'].append( get_original_publish_year(original_publish_year.text) )
         content_dict['places'].append(places)
         content_dict['awards'].append(awards)
-        content_dict['genres'].append(None)
+        content_dict['genres'].append(genres)
 
         #save data to csv after save_freq iterations
         if k%save_freq == 0 and k != 0:
@@ -152,9 +160,6 @@ while True:
             main_driver = webdriver.Chrome(my_driver,options=op)
             main_driver.implicitly_wait(wait_time)
             main_driver.get(main_url)
-            
-            
-            #next_page = main_driver.find_element_by_xpath('//body[@id="styleguide-v2"]')
             
             next_page = main_driver.find_element_by_xpath('//a[@class="next_page"]')
 
