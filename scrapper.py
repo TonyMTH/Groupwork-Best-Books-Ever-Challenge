@@ -98,8 +98,11 @@ while True:
         try:
             setting_div = bookDataBox.find_element_by_xpath("//div[text()='Setting']")
             settings = setting_div.find_element_by_xpath("./following-sibling::div")
+            children = settings.find_elements_by_xpath('./span[contains(@class, "toggleLink")]')
+            if len(children) != 0:
+                children[0].click()
             places = settings.find_elements_by_tag_name("a")
-            places = [ p.text for p in places if p.text != '…more' and p.text.strip() != '']
+            places = [ a.text for a in places if a.get_attribute("href")[-1] != '#' ]
         except:
             places = None
 
@@ -150,9 +153,6 @@ while True:
             main_driver = webdriver.Chrome(my_driver,options=op)
             main_driver.implicitly_wait(wait_time)
             main_driver.get(main_url)
-            
-            
-            #next_page = main_driver.find_element_by_xpath('//body[@id="styleguide-v2"]')
             
             next_page = main_driver.find_element_by_xpath('//a[@class="next_page"]')
 
