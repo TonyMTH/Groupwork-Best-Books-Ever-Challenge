@@ -111,16 +111,6 @@ while True:
         except:
             awards = None
 
-        # #genres_div = main_driver.find_element_by_xpath("//div[text()='Genres']")
-        # right_container = main_driver.find_element_by_xpath('.//div[@class="rightContainer"]')
-        # bigBoxBody = right_container.find_element_by_xpath('//div[@class="bigBoxContent containerWithHeaderContent"]')
-        # #class="h2Container gradientHeaderContainer"
-        # print('the')
-        # #print(genres_div.text)
-        # #genres = genres_div.find_element_by_xpath("./following-sibling::div")
-        # genres = bigBoxBody.find_elements_by_xpath('.//a[@class="actionLinkLite bookPageGenreLink"]')
-        # print(genres)
-        # #genres = [g.find_elements_by_xpath('.//div[@class="left"]').text for g in genres]
 
         content_dict['num_reviews'].append( get_no_review_pages(hyperlink[-1].text) )
         content_dict['num_pages'].append( get_no_review_pages(numberOfPages.text) )
