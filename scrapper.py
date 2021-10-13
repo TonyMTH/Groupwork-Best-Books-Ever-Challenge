@@ -43,7 +43,7 @@ except:
 #print(main_url)
 k=0
 
-save_freq = 3
+save_freq = 4
 no_items_needed = 5000
 wait_time = 5
 
@@ -62,10 +62,10 @@ while True:
 
     den_divisor = len(books)
     it = next_row%den_divisor
+    # print(it,next_row,len(books))
 
 
     while it+1 != len(books):
-        print("error",it)
         #back to base url
         main_driver = webdriver.Chrome(my_driver,options=op)
         main_driver.implicitly_wait(wait_time)
@@ -188,7 +188,7 @@ while True:
             
             df = pd.DataFrame(content_dict)
             df.to_csv(csv_name, mode='a', header=False, index=False)
-            print("writen now: "+str(save_freq)+", tottal written:"+str(next_row))
+            print("Within page writing: "+str(save_freq)+", tottal written:"+str(next_row))
             content_dict = {'url':[],'title':[],'author':[],'num_reviews':[],'num_ratings':[],'avg_rating':[],'num_pages':[],\
                 'original_publish_year':[],'series':[],'genres':[],'awards':[],'places':[],'description':[],'book_index':[]}
         k += 1
@@ -197,10 +197,11 @@ while True:
         
     next_row += 1
 
+
     #save data to csv after
     df = pd.DataFrame(content_dict)
     df.to_csv(csv_name, mode='a', header=False, index=False)
-    print("writen now: "+str(k%save_freq)+", tottal written:"+str(next_row))
+    print("After page writing: "+str(k%save_freq)+", tottal written:"+str(next_row))
     content_dict = {'url':[],'title':[],'author':[],'num_reviews':[],'num_ratings':[],'avg_rating':[],'num_pages':[],\
         'original_publish_year':[],'series':[],'genres':[],'awards':[],'places':[],'description':[],'book_index':[]}  
         
@@ -227,7 +228,6 @@ while True:
             with open(page_number_store,'w') as file:
                 file.write(str(page_number))
                 file.write('\n')
-        #print("else  (try)===== if k != 0: "+str(k)+"it+1 != len(books):"+str(it+1)+", "+str(len(books)))
 
         #Stop after no_items_needed
         if k >= no_items_needed:
@@ -245,7 +245,7 @@ while True:
 if k%save_freq != 0:
     df = pd.DataFrame(content_dict)
     df.to_csv(csv_name, mode='a', header=False, index=False)
-    print("writen now: "+str(k%save_freq)+", total written:"+str(next_row))
+    print("final writing now: "+str(k%save_freq)+", total written:"+str(next_row))
 
 
 
