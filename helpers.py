@@ -18,3 +18,6 @@ def get_original_publish_year(original_publish_year):
     
 def get_no_review_pages(review_pages):
     return int(review_pages.replace(',','').split()[0])
+
+def get_book_index(link):
+    return int(''.join([i for i in link.split('/')[-1] if i.isdigit()]))
