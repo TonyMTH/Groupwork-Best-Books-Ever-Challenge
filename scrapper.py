@@ -21,8 +21,6 @@ def scraper(my_driver,csv_name,page_url_csv,page_number_store,save_freq,no_items
     #open chrome
     op = webdriver.ChromeOptions()
     op.add_argument('headless')
-    # main_url = 'https://www.goodreads.com/list/show/1.Best_Books_Ever'
-
 
     #collect in dictionary
     content_dict = {'url':[],'title':[],'author':[],'num_reviews':[],'num_ratings':[],'avg_rating':[],'num_pages':[],\
