@@ -25,6 +25,7 @@ def check_author(df, author, no_of_author):
 # Plot Authors and their total awards
 def make_plot(df, x_label, y_label, title, st, kind):
     plt.style.use('ggplot')
+    plt.rc('font', size=15)
     
     if kind != 'pie':
         fig, ax = plt.subplots(figsize=(12,10))
@@ -113,7 +114,7 @@ def tranform_places_genres(df):
     for g in places_rating.keys():
         places_rating[g] = np.round(np.mean(places_rating[g]),decimals=3)
 
-    dic_places_rating = dict(zip(genres_rating.keys(), genres_rating.values()))
+    dic_places_rating = dict(zip(places_rating.keys(), places_rating.values()))
     df_places_rating = pd.DataFrame.from_dict(dic_places_rating, orient='index',\
         columns=['mean_ratings']).sort_values(by='mean_ratings',ascending=False)
 
