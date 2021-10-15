@@ -167,8 +167,8 @@ select_list = st.selectbox('Select the plot',('Bar','Pie','Line','Horizontal Bar
 charts = {'Bar':'bar','Pie':'pie','Line':'line','Horizontal Bar':'barh'}
 min_year = sorted([i for i in data.original_publish_year if i > 0])[0]
 
-min_year = st.text_input(label= 'From', value=2000)
-max_year = st.text_input(label= 'To', value=now_year)
+min_year = st.number_input('From', min_value=1, max_value=now_year, value=2000, step=1)
+max_year = st.number_input('To', min_value=min_year+1, max_value=now_year, value=2020, step=1)
 
 year_rating = data.groupby(['original_publish_year'], as_index=False)['minmax_norm_ratings'].mean().sort_values(by='minmax_norm_ratings', ascending=False)
 year_rating = year_rating.loc[(year_rating['original_publish_year'] >= int(min_year)) & (year_rating['original_publish_year'] <= int(max_year))]
@@ -218,9 +218,9 @@ d=data[['original_publish_year','num_pages']].groupby(by='original_publish_year'
 select_list = st.selectbox('Select the plot',('Line Plot','Bar','Pie','Horizontal Bar'),key='Lines Plot')
 charts = {'Bar':'bar','Pie':'pie','Line Plot':'line','Horizontal Bar':'barh'}
 
-start = int(st.text_input(label= 'From', value=1500))
-time_interval = int(st.text_input(label= 'Year Interval', value=50))
-last = int(st.text_input(label= 'To', value=2000))
+start = st.number_input('From', min_value=1, max_value=now_year, value=1500, step=1)
+time_interval = st.number_input('Year Interval', min_value=1, max_value=now_year-1, value=50, step=1)
+last = st.number_input('To', min_value=start+1, max_value=now_year, value=2000, step=1)
 
 df_year_pages = d.groupby(pd.cut(d.index, np.arange(start-time_interval, last+time_interval, time_interval))).sum()
 y_label = "Total Number of Pages"
